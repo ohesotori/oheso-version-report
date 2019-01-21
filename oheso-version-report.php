@@ -9,6 +9,7 @@ Author URI: https://ohesotori.hateblo.jp/
 Version: 0.1
 */
 define('OHESO_API_URL', 'https://api.wordpress.org/plugins/info/1.0/');
+define('OHESO_WPPLUGIN_URL', 'https://wordpress.org/plugins/');
 define('OHESO_TEMPLATE', 'template.php');
 
 /**
@@ -71,7 +72,6 @@ class OhesoVersionReport
      */
     private function get_from_official()
     {
-        $opt = array('ssl' => array('verify_peer' => false, 'verify_peer_name' => false));
         global $wp_version;
 
         $core = get_site_transient('update_core');
@@ -84,53 +84,37 @@ class OhesoVersionReport
         $data['core']['cur'] = preg_replace('/-.*$/', '', $wp_version);
         $data['core']['new'] = $core->updates[0]->current;
 
-        foreach ($plgn->response as $k => $v) {
-            $name = $in_plugins[$k]['Name'];
-            $cur = $in_plugins[$k]['Version'];
-            $new = $v->new_version;
+        foreach ($plgn->response as $path => $v) {
             $data['plugins'][] = array(
-                'name' => $name,
-                'cur' => $cur,
-                'new' => $new,
+                'name' => $in_plugins[$path]['Name'],
+                'cur' => $in_plugins[$path]['Version'],
+                'new' => $v->new_version,
             );
         }
-        foreach ($thme->response as $k => $v) {
-            $name = $in_themes[$k]->Name;
-            $cur = $in_themes[$k]->Version;
-            $new = $v['new_version'];
-            echo $name;
+        foreach ($thme->response as $path => $v) {
             $data['themes'][] = array(
-                'name' => $name,
-                'cur' => $cur,
-                'new' => $new,
+                'name' => $in_themes[$path]->Name,
+                'cur' => $in_themes[$path]->Version,
+                'new' => $v['new_version'],
             );
         }
-        foreach ($in_plugins as $k => $v) {
-            $path = $k;
-            $name = $v['Name'];
-            $ver = $v['Version'];
-            $dir = $v['PluginURI'];
-            $url = OHESO_API_URL.dirname($k);
-            $ser = file_get_contents($url, false, stream_context_create($opt));
-
+        foreach ($in_plugins as $path => $v) {
+            $apiurl = OHESO_API_URL.dirname($path);
+            $json = wp_remote_get($apiurl);
             $plugin_info = $lastupdated = $updated = null;
-            if (is_serialized($ser)) {
-                $plugin_info = unserialize($ser);
+			if ($json && $json['response']['code'] == 200 ) {
+				$plugin_info = unserialize($json["body"]);
                 if (!isset($plugin_info->error)) {
                     $lastupdated = $plugin_info->last_updated;
                     $updated = strtotime($plugin_info->last_updated);
                 }
             }
-            $active = is_plugin_active($k);
-            $mu_active = null;
-            if (is_multisite()) {
-                $mu_active = is_plugin_active_for_network($k);
-            }
             $data['in_plugins'][] = array(
                 'path' => $path,
-                'name' => $name,
-                'ver' => $ver,
-                'url' => $url,
+                'name' => $v['Name'],
+                'ver' => $v['Version'],
+                'apiurl' => $apiurl,
+                'url' => OHESO_WPPLUGIN_URL.dirname($path),
                 'lastupdated' => $lastupdated,
                 'updated' => $updated,
             );

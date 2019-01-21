@@ -8,7 +8,16 @@ padding: 2px;
 border-bottom: 1px solid #ccc;
 }
 .oheso-report table td.active {
-	border-left: 4px solid #00a0d2;
+border-left: 4px solid #00a0d2;
+}
+.oheso-report .createdate {
+display:inline-block;
+font-weight: bold;
+font-size: 1.2em;
+padding: 5px;
+background-color: #fff;
+border: 1px solid #ccc;
+color: #009e9f;
 }
 </style>
 <div class="wrap">
@@ -44,7 +53,7 @@ border-bottom: 1px solid #ccc;
 <div class="oheso-report">
 <h3><?= bloginfo('title'); ?></h3>
 <div><?= bloginfo('url'); ?></div>
-<div>create date : <?= date('Y-m-d H:i:s', $saveddate); ?></div>
+<div class="createdate">create date : <?= date('Y-m-d H:i:s', $saveddate); ?></div>
 <table class="wp-list-table">
 <tr>
 <th>Name</th>
