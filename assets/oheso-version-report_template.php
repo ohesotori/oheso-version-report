@@ -3,6 +3,7 @@
 <hr class="wp-header-end">
 
 <?php
+	$timeformat = 'Y-m-d H:i:s T O';
 ?>
 
 <table class="form-table">
@@ -10,7 +11,7 @@
 	<th><label for="CheckPublicDirectory">Check Wordpress Public Directory</label></th>
 	<td>
 		<form id="oheso-version-report-check" action="" method="post">
-		<input type="submit" name="submit" id="submit" class="button button-primary" value="Check!"  />
+		<input type="submit" name="submit" id="submit" class="button button-primary" value="Update Report"  />
 		<input type="hidden" name="action" value="check" />
 		</form>
 	</td>
@@ -27,62 +28,79 @@
 </tr -->
 </table>
 
+
+<?php if(isset($saveddata) && $saveddata !== false) : ?>
 <hr />
 <div class="oheso-report">
-<h3><?= bloginfo('title'); ?></h3>
-<div><?= bloginfo('url'); ?></div>
-<div class="createdate">create date : <?= date('Y-m-d H:i:s', $saveddate); ?></div>
+<h3>Version Report Summary</h3>
+
+<table>
+<tr><th>Site Name</th><td><?= bloginfo('title'); ?></td></tr>
+<tr><th>Site URL</th><td><?= bloginfo('url'); ?></td></tr>
+<tr><th>Report Create Date</th><td class="createdate"><?= date($timeformat, $saveddate); ?></td></tr>
+</table>
+
+<h3>Update Summary</h3>
+<table>
+
+<tr><th>Core</th><td>
+<?php if ($saveddata['core']['cur'] != $saveddata['core']['new']) : ?>
+<table class="wp-list-table">
+<tr><th>Ver</th></tr>
+<tr><td><?= $saveddata['core']['cur']; ?> -> <?= $saveddata['core']['new']; ?></td></tr>
+</table>
+<?php else: ?>
+<div>This is latest version.</div>
+<?php endif; ?>
+</td></tr>
+
+<tr><th>Plugins</th><td>
+<?php 
+if (isset($saveddata['plugins'])
+  && is_array($saveddata['plugins'])
+  && count($saveddata['plugins']) > 0) : ?>
 <table class="wp-list-table">
 <tr>
 <th>Name</th>
 <th>Ver</th>
 </tr>
-<?php if ($saveddata['core']['cur'] != $saveddata['core']['new']) : ?>
-<tr>
-<td>[Core]</td>
-<td><?= $saveddata['core']['cur']; ?> -> <?= $saveddata['core']['new']; ?></td>
-</tr>
-<?php endif; ?>
-<tr>
-<th>Plugins</th>
-</tr>
-<?php 
-if (isset($saveddata['plugins'])
-  && is_array($saveddata['plugins'])
-  && count($saveddata['plugins']) > 0) : ?>
 <?php foreach ($saveddata['plugins'] as $k => $v) : ?>
 <tr>
 <td>[<?= $v['name']; ?>]</td>
 <td><?= $v['cur']; ?> -> <?= $v['new']; ?></td>
 </tr>
 <?php endforeach; ?>
+</table>
 <?php else: ?>
-<tr>
-<td>No data</td>
-<td></td>
-</tr>
+<div>No plugins provided with updated versions.</div>
 <?php endif; ?>
+</td></tr>
 
-<tr>
-<th>Themes</th>
-</tr>
+<tr><th>Themes</th><td>
 <?php
 if (isset($saveddata['themes'])
   && is_array($saveddata['themes'])
   && count($saveddata['themes']) > 0) : ?>
+<table class="wp-list-table">
+<tr>
+<th>Name</th>
+<th>Ver</th>
+</tr>
 <?php foreach ($saveddata['themes'] as $k => $v) : ?>
 <tr>
 <td>[<?= $v['name']; ?>]</td>
 <td><?= $v['cur']; ?> -> <?= $v['new']; ?></td>
 </tr>
 <?php endforeach; ?>
-<?php else: ?>
-<tr>
-<td>No data</td>
-<td></td>
-</tr>
-<?php endif; ?>
 </table>
+<?php else: ?>
+<div>No themes provided with updated versions.</div>
+<?php endif; ?>
+</td></tr>
+
+</table>
+
+
 <p>&nbsp;</p>
 <h3>Plugin Information</h3>
 <?php
@@ -99,13 +117,17 @@ if (isset($saveddata['in_plugins'])
 </tr>
 <?php  foreach ($saveddata['in_plugins'] as $k => $v) : ?>
 <tr scope="row">
+<?php if ($v['lastupdated'] != null) :?>
 <td <?php if (is_plugin_active($v['path'])) :?>class="active"<?php endif; ?>><a href="<?= $v['url']; ?>" target="_blank"><?= $v['name']; ?></a></td>
+<?php else : ?>
+<td <?php if (is_plugin_active($v['path'])) :?>class="active"<?php endif; ?>><?= $v['name']; ?></td>
+<?php endif; ?>
 <td><?= $v['ver']; ?></td>
 <?php if ($v['lastupdated'] != null) :?>
-<td><?= $v['lastupdated']; ?></td>
+<td><?= date($timeformat, $v['updated']); ?></td>
 <td><?= round((time() - $v['updated']) / 86400); ?></td>
 <?php else : ?>
-<td>Not Found.</td>
+<td>Not Found.<br>Probably unofficial or obsolete.</td>
 <td></td>
 <?php endif; ?>
 <?php if (is_multisite()) : ?><td><?= is_plugin_active_for_network($v['path']) ? 'active' : 'inactive'; ?></td><?php endif; ?>
@@ -116,3 +138,4 @@ if (isset($saveddata['in_plugins'])
 </div>
 <br class="clear" />
 </div>
+<?php endif; ?>

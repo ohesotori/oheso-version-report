@@ -7,6 +7,7 @@
 .oheso-report table td {
     padding: 2px;
     border-bottom: 1px solid #ccc;
+    line-height: 1.6em;
 }
 .oheso-report table td.active {
     border-left: 4px solid #00a0d2;
