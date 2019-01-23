@@ -10,16 +10,37 @@ Version: 0.1
 */
 define('OHESO_API_URL', 'https://api.wordpress.org/plugins/info/1.0/');
 define('OHESO_WPPLUGIN_URL', 'https://wordpress.org/plugins/');
-define('OHESO_TEMPLATE', 'template.php');
 
 /**
  * Oheso Version Report.
  */
 class OhesoVersionReport
 {
+    private $plugin_url = '';
+    private $plugin_dir = '';
+
+    private $assets_dir = 'assets/';
+    private $css_handle = 'oheso-version-report';
+    private $css_file   = 'oheso-version-report.css';
+    private $css_ver = '';
+    private $template_file = 'oheso-version-report_template.php';
+
+
     public function __construct()
     {
         add_action('admin_menu', array($this, 'add_plugin_page'));
+
+        $this->plugin_url = plugin_dir_url(__FILE__);
+        $this->plugin_dir = plugin_dir_path(__FILE__);
+        $oheso_css_url = $this->plugin_url . $this->assets_dir . $this->css_file;
+        $oheso_css_ver = md5_file( $this->plugin_dir . $this->assets_dir . $this->css_file );
+        wp_register_style(
+            $this->css_handle,
+            $oheso_css_url,
+            array(),
+            $oheso_css_ver,
+            'all'
+        );
     }
 
     /**
@@ -42,6 +63,8 @@ class OhesoVersionReport
      */
     public function process()
     {
+        wp_enqueue_style($this->css_handle);
+        
         $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
         switch ($action) {
         case 'check':
@@ -53,10 +76,25 @@ class OhesoVersionReport
             break;
         }
         $this->get_saved_data();
+        
+        $this->include_template();
+    }
+
+    private function include_template()
+    {
         $saveddata = $this->saveddata;
         $saveddate = $this->saveddate;
-        include OHESO_TEMPLATE;
+
+        // search template file in theme
+        $theme_file = locate_template( $this->template_file );
+
+        if ( isset( $theme_file ) && $theme_file ) {
+            include $theme_file;
+        } else {
+            include $this->assets_dir . $this->template_file ;
+        }
     }
+
 
     /**
      * get data list.

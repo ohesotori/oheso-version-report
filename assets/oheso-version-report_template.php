@@ -1,25 +1,3 @@
-<style>
-.oheso-report {
-line-height: 1.2em;
-}
-.oheso-report table th,
-.oheso-report table td {
-padding: 2px;
-border-bottom: 1px solid #ccc;
-}
-.oheso-report table td.active {
-border-left: 4px solid #00a0d2;
-}
-.oheso-report .createdate {
-display:inline-block;
-font-weight: bold;
-font-size: 1.2em;
-padding: 5px;
-background-color: #fff;
-border: 1px solid #ccc;
-color: #009e9f;
-}
-</style>
 <div class="wrap">
 <h2 class="wp-heading-inline">Version Report</h2>
 <hr class="wp-header-end">
