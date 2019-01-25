@@ -1,16 +1,20 @@
 <?php
 /*
 Plugin Name: oheso-version-report
-Plugin URI:
+Plugin URI: https://wordpress.org/plugins/oheso-version-report/
 Description: Display update guidance, version of plug-in and date of update collectively.
 Author: ohesotori@gmail.com
 Text Domain: oheso-version-report
 Author URI: https://ohesotori.hateblo.jp/
 Version: 0.1
 */
+
+namespace oheso;
+
 define('OHESO_API_URL', 'https://api.wordpress.org/plugins/info/1.0/');
 define('OHESO_WPPLUGIN_URL', 'https://wordpress.org/plugins/');
-define('OHESO_TEMPLATE', 'template.php');
+
+define('OHESO_PLUGIN_NAME', 'oheso-version-report');
 
 /**
  * Oheso Version Report.
@@ -19,13 +23,36 @@ class OhesoVersionReport
 {
     public function __construct()
     {
+        spl_autoload_register(array($this, 'autoload'));
+
         add_action('admin_menu', array($this, 'add_plugin_page'));
+    }
+
+    /**
+     * autoload
+     */
+    function autoload($class) {
+        // クラス名を \ を区切りにして配列化する
+        $class_path = explode('\\', $class);
+    
+        // クラスのネームスペースが一致するかチェック
+        if ($class_path[0] === __NAMESPACE__) {
+            // ファイルパスを作るために、namespace のルートをこのディレクトリに変更
+            $class_path[0] = __DIR__;
+    
+            // 配列を / でつないでファイル名を作る
+            $file_path = implode(DIRECTORY_SEPARATOR, $class_path) . '.php';
+    
+            // 対象ファイルが実在すれば読み込む
+            if (file_exists($file_path)) {
+                require_once $file_path;
+            }
+        }
     }
 
     /**
      * Menu.
      */
-    public function add_plugin_page()
     {
         add_submenu_page(
             'options-general.php',
@@ -52,11 +79,13 @@ class OhesoVersionReport
         default:
             break;
         }
+
         $this->get_saved_data();
-        $saveddata = $this->saveddata;
-        $saveddate = $this->saveddate;
-        include OHESO_TEMPLATE;
+
+        $report = new theme\theme_loader();
+        $report->get_report_theme($this->saveddata, $this->saveddate);
     }
+
 
     /**
      * get data list.
@@ -124,6 +153,7 @@ class OhesoVersionReport
         update_option('oheso_version_report_saveddate', time());
     }
 } // end of class
+
 
 if (is_admin()) {
     $ovr = new OhesoVersionReport();
