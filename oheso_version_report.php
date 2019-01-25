@@ -41,7 +41,7 @@ class OhesoVersionReport
             $class_path[0] = __DIR__;
     
             // 配列を / でつないでファイル名を作る
-            $file_path = implode('/', $class_path) . '.php';
+            $file_path = implode(DIRECTORY_SEPARATOR, $class_path) . '.php';
     
             // 対象ファイルが実在すれば読み込む
             if (file_exists($file_path)) {
@@ -53,7 +53,6 @@ class OhesoVersionReport
     /**
      * Menu.
      */
-    public function add_plugin_page()
     {
         add_submenu_page(
             'options-general.php',
