@@ -53,6 +53,7 @@ class OhesoVersionReport
     /**
      * Menu.
      */
+    public function add_plugin_page()
     {
         add_submenu_page(
             'options-general.php',
