@@ -21,3 +21,8 @@
     border: 1px solid #ccc;
     color: #009e9f;
 }
+.oheso-report table td.lastupdate,
+.oheso-report table td.pastdays {
+    text-align: right;
+}
+

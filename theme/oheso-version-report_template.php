@@ -1,10 +1,10 @@
+<?php
+	$timeformat = 'Y-m-d H:i:s';
+?>
+
 <div class="wrap">
 <h2 class="wp-heading-inline">Version Report</h2>
 <hr class="wp-header-end">
-
-<?php
-	$timeformat = 'Y-m-d H:i:s T O';
-?>
 
 <table class="form-table">
 <tr>
@@ -12,7 +12,7 @@
 	<td>
 		<form id="oheso-version-report-check" action="" method="post">
 		<input type="submit" name="submit" id="submit" class="button button-primary" value="Update Report"  />
-		<input type="hidden" name="action" value="check" />
+		<input type="hidden" name="action" value="check_versions" />
 		</form>
 	</td>
 
@@ -37,7 +37,7 @@
 <table>
 <tr><th>Site Name</th><td><?= bloginfo('title'); ?></td></tr>
 <tr><th>Site URL</th><td><?= bloginfo('url'); ?></td></tr>
-<tr><th>Report Create Date</th><td class="createdate"><?= date($timeformat, $saveddate); ?></td></tr>
+<tr><th>Report Create Date</th><td class="createdate"><?= date($timeformat, $saveddate); ?> <?= date('T O'); ?></td></tr>
 </table>
 
 <h3>Update Summary</h3>
@@ -111,7 +111,7 @@ if (isset($saveddata['in_plugins'])
 <tr>
 <th>Name</th>
 <th>Ver</th>
-<th>lastupdate</th>
+<th>lastupdate<br>TZ: <?= date('T O'); ?></th>
 <th>past days</th>
 <?php if (is_multisite()) : ?><th>MU Use</th><?php endif; ?>
 </tr>
@@ -124,11 +124,10 @@ if (isset($saveddata['in_plugins'])
 <?php endif; ?>
 <td><?= $v['ver']; ?></td>
 <?php if ($v['lastupdated'] != null) :?>
-<td><?= date($timeformat, $v['updated']); ?></td>
-<td><?= round((time() - $v['updated']) / 86400); ?></td>
+<td class="lastupdate"><?= date($timeformat, $v['updated']); ?></td>
+<td class="pastdays"><?= number_format((time() - $v['updated']) / 86400); ?></td>
 <?php else : ?>
-<td>Not Found.<br>Probably unofficial or obsolete.</td>
-<td></td>
+<td colspan="2">Not Found.<br>Probably unofficial or obsolete.</td>
 <?php endif; ?>
 <?php if (is_multisite()) : ?><td><?= is_plugin_active_for_network($v['path']) ? 'active' : 'inactive'; ?></td><?php endif; ?>
 </tr>
