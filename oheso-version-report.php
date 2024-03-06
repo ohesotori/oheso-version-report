@@ -6,7 +6,7 @@ Description: Display update guidance, version of plug-in and date of update coll
 Author: ohesotori@gmail.com
 Text Domain: oheso-version-report
 Author URI: https://ohesotori.hateblo.jp/
-Version: 0.1
+Version: 0.2
 */
 
 namespace oheso;
@@ -55,7 +55,7 @@ class OhesoVersionReport
      */
     public function process()
     {
-        $action = filter_input(INPUT_POST, 'action', FILTER_SANITIZE_STRING);
+        $action = isset($_POST['action']) ? $_POST['action'] : null;
 
         switch ($action) {
             // $action と同名のクラスを呼び出す
