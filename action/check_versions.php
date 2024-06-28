@@ -42,12 +42,9 @@ class check_versions
             $apiurl = self::OHESO_API_URL.dirname($path);
             $json = wp_remote_get($apiurl);
             $plugin_info = $lastupdated = $updated = null;
-			if ($json && $json['response']['code'] == 200 ) {
-				$plugin_info = unserialize($json["body"]);
-                if (!isset($plugin_info->error)) {
-                    $lastupdated = $plugin_info->last_updated;
-                    $updated = strtotime($plugin_info->last_updated);
-                }
+            if ($json && $json['response']['code'] == 200 ) {
+                $plugin_info = is_serialized($json["body"]) ? unserialize($json["body"]) : null;
+                $updated = isset($plugin_info->last_updated) ? strtotime($plugin_info->last_updated) : null;
             }
             $data['in_plugins'][] = array(
                 'path' => $path,

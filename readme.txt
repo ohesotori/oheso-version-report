@@ -25,6 +25,9 @@ displayed in a list.
 
 == Changelog ==
 
+= 0.4 =
+* fixed warning
+
 = 0.3 =
 * remove FILTER_SANITIZE_STRING (deprecated)
 
