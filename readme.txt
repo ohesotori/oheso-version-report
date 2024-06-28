@@ -2,8 +2,8 @@
 Contributors: ohesotori
 Tags: themes, plugins, version, report
 Requires at least: 4.5
-Tested up to: 5.0.3
-Stable tag: 0.1
+Tested up to: 6.4.3
+Stable tag: 0.3
 License: GPLv2 or later.
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,12 @@ displayed in a list.
 == Frequently Asked Questions ==
 
 == Changelog ==
+
+= 0.3 =
+* remove FILTER_SANITIZE_STRING (deprecated)
+
+= 0.2 =
+* adopted class autoloader and theme autoloader.
 
 = 0.1 =
 * First Release (beta)
