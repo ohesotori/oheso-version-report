@@ -1,9 +1,9 @@
 === Oheso Version Report ===
 Contributors: ohesotori
 Tags: themes, plugins, version, report
-Requires at least: 4.5
-Tested up to: 6.4.3
-Stable tag: 0.3
+Requires at least: 6.0
+Tested up to: 6.5.5
+Stable tag: 0.4
 License: GPLv2 or later.
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
