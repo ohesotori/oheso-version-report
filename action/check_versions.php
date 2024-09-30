@@ -44,6 +44,7 @@ class check_versions
             $plugin_info = $lastupdated = $updated = null;
             if ($json && $json['response']['code'] == 200 ) {
                 $plugin_info = is_serialized($json["body"]) ? unserialize($json["body"]) : null;
+                $lastupdated = $plugin_info->last_updated;
                 $updated = isset($plugin_info->last_updated) ? strtotime($plugin_info->last_updated) : null;
             }
             $data['in_plugins'][] = array(
