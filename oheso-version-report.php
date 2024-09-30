@@ -6,7 +6,7 @@ Description: Display update guidance, version of plug-in and date of update coll
 Author: ohesotori@gmail.com
 Text Domain: oheso-version-report
 Author URI: https://ohesotori.hateblo.jp/
-Version: 0.4
+Version: 0.5
 */
 
 namespace oheso;
