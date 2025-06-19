@@ -17,15 +17,15 @@
 	</td>
 
 </tr>
-<!-- tr>
-	<th><label for="CheckPublicDirectory">Mail To This Report</label></th>
-	<td>
-		<form id="oheso-version-report-mail" action="" method="post">
-		<input type="submit" name="submit" id="submit" class="button button-primary" value="Mail To Admin"  />
-		<input type="hidden" name="action" value="mail" />
-		</form>
-	</td>
-</tr -->
+<tr>
+        <th><label for="CheckPublicDirectory">Mail This Report</label></th>
+        <td>
+                <form id="oheso-version-report-mail" action="" method="post">
+                <input type="submit" name="submit" id="submit" class="button button-primary" value="Mail To Admin"  />
+                <input type="hidden" name="action" value="mail" />
+                </form>
+        </td>
+</tr>
 </table>
 
 
